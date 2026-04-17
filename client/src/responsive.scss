@@ -1,0 +1,17 @@
+@mixin sm{
+    @media(max-width: 638px) {
+        @content; 
+    }
+}
+
+@mixin md{
+    @media(max-width: 824px) {
+        @content; 
+    }
+}
+
+@mixin lg{
+    @media(max-width: 1066px) {
+        @content; 
+    }
+}

@@ -1,0 +1,364 @@
+@import "../../responsive.scss";
+
+.profilePage{
+    display: flex;
+    height: 100%;
+    gap: 16px;
+
+    @include md{
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .details{
+        flex: 3;
+        overflow-y: auto;
+        padding-bottom: 10px;
+        background: #fff;
+        border: 1px solid #e8edf3;
+        border-radius: 20px;
+        box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
+
+        @include md{
+        flex: none;
+        height: max-content;
+        }
+
+        .wrapper{
+            padding: 20px;
+            display: flex;
+            margin-top: 0;
+            flex-direction: column;
+            gap: 26px;
+
+            .profileHero {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                border: 1px solid #e3ecf6;
+                border-radius: 18px;
+                padding: 16px;
+                background: linear-gradient(125deg, #f4f9ff 0%, #edf4ff 45%, #f6fffb 100%);
+
+                @include sm {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 14px;
+                }
+
+                .identity {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+
+                    img {
+                        width: 72px;
+                        height: 72px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 3px solid #ffffff;
+                        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+                    }
+
+                    .eyebrow {
+                        font-size: 12px;
+                        color: #0f766e;
+                        font-weight: 700;
+                        letter-spacing: 0.06em;
+                        text-transform: uppercase;
+                        margin-bottom: 4px;
+                    }
+
+                    h1 {
+                        font-size: clamp(24px, 3vw, 34px);
+                        color: #0f172a;
+                        line-height: 1.1;
+                        margin-bottom: 4px;
+                    }
+
+                    .subtext {
+                        font-size: 14px;
+                        color: #4b5563;
+                    }
+                }
+
+                .heroActions {
+                    display: flex;
+                    gap: 10px;
+
+                    @include sm {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .statsGrid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 12px;
+
+                @include sm {
+                    grid-template-columns: 1fr;
+                }
+
+                .statCard {
+                    border: 1px solid #e4ebf4;
+                    border-radius: 14px;
+                    background: #fbfdff;
+                    padding: 14px;
+
+                    h3 {
+                        color: #64748b;
+                        font-size: 13px;
+                        font-weight: 700;
+                        margin-bottom: 8px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.04em;
+                    }
+
+                    p {
+                        color: #0f172a;
+                        font-size: 24px;
+                        font-weight: 800;
+                    }
+                }
+            }
+
+            .sectionHeader {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+
+                @include sm {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                h2 {
+                    font-size: clamp(22px, 2.3vw, 30px);
+                    color: #0f172a;
+                    line-height: 1.14;
+                }
+            }
+
+            .actionBtn {
+                border: none;
+                border-radius: 12px;
+                padding: 10px 16px;
+                font-weight: 700;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                @include sm {
+                    width: 100%;
+                }
+
+                &.primary {
+                    background: linear-gradient(120deg, #0f766e 0%, #1f9d92 100%);
+                    color: #fff;
+                    box-shadow: 0 10px 18px rgba(22, 143, 140, 0.22);
+                }
+
+                &.ghost {
+                    background: #fff;
+                    color: #0f172a;
+                    border: 1px solid #d4dde8;
+                }
+            }
+
+            .stateText {
+                border: 1px dashed #d5dde8;
+                border-radius: 12px;
+                padding: 14px;
+                color: #6b7280;
+                font-size: 14px;
+                background: #fbfdff;
+
+                &.error {
+                    color: #b42318;
+                    border-color: #f4c0c0;
+                    background: #fff4f4;
+                }
+            }
+
+            .adminEssentials {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .adminCards {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+
+                    @include sm {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                .adminCard {
+                    border: 1px solid #e4ebf4;
+                    border-radius: 14px;
+                    background: #fbfdff;
+                    padding: 14px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    h3 {
+                        font-size: 18px;
+                        color: #0f172a;
+                    }
+
+                    p {
+                        color: #6b7280;
+                        font-size: 14px;
+                        line-height: 1.5;
+                    }
+
+                    .actionBtn {
+                        width: fit-content;
+
+                        @include sm {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
+            .rentalHub {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .rentalGrid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+
+                    @include sm {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                .rentalCard {
+                    border: 1px solid #e4ebf4;
+                    border-radius: 14px;
+                    background: #fbfdff;
+                    padding: 14px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    &.fullWidth {
+                        grid-column: 1 / -1;
+                    }
+
+                    h3 {
+                        color: #0f172a;
+                        font-size: 18px;
+                    }
+
+                    p {
+                        color: #6b7280;
+                        font-size: 14px;
+                    }
+                }
+
+                .rentalList {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    max-height: 300px;
+                    overflow: auto;
+                }
+
+                .rentalItem {
+                    border: 1px solid #e8edf4;
+                    border-radius: 10px;
+                    padding: 10px;
+                    background: #ffffff;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    strong {
+                        color: #0f172a;
+                        font-size: 14px;
+                    }
+
+                    span {
+                        color: #64748b;
+                        font-size: 13px;
+                        line-height: 1.4;
+                    }
+
+                    button {
+                        border: none;
+                        border-radius: 8px;
+                        background: linear-gradient(120deg, #0f766e 0%, #1f9d92 100%);
+                        color: #ffffff;
+                        padding: 8px 10px;
+                        font-size: 12px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        margin-top: 4px;
+                    }
+
+                    .rentalActions {
+                        display: flex;
+                        gap: 8px;
+
+                        button:last-child {
+                            background: linear-gradient(120deg, #ef4444 0%, #dc2626 100%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .chatContainer{
+        flex: 2;
+        background: linear-gradient(180deg, #f7f2e7 0%, #f2e8d8 100%);
+        border: 1px solid #e5d9c3;
+        border-radius: 20px;
+        height: 100%;
+        box-shadow: 0 16px 32px rgba(33, 24, 8, 0.08);
+
+        @include md{
+        flex: none;
+        height: max-content;
+        }
+
+        .wrapper{
+            padding: 14px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chatHead {
+            border: 1px solid #e9dec8;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.72);
+            padding: 12px;
+
+            h2 {
+                font-size: 22px;
+                color: #1f2937;
+                margin-bottom: 3px;
+            }
+
+            p {
+                font-size: 13px;
+                color: #6b7280;
+            }
+        }
+    }
+}

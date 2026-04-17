@@ -1,0 +1,247 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  username  String   @unique
+  password  String
+  avatar    String?
+  isAdmin   Boolean  @default(false)
+  isBlocked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  posts Post[]
+  savedPosts SavedPost[]
+  rentalApplications RentalApplication[] @relation("ApplicantApplications")
+  ownedRentalApplications RentalApplication[] @relation("OwnerApplications")
+  rentalAgreementsAsOwner RentalAgreement[] @relation("AgreementOwner")
+  rentalAgreementsAsRenter RentalAgreement[] @relation("AgreementRenter")
+  paymentsMade Payment[] @relation("PaymentPayer")
+  paymentsReceived Payment[] @relation("PaymentReceiver")
+  notifications Notification[]
+  chats Chat[] @relation(fields: [chatIDs],references: [id])
+  chatIDs String[] @db.ObjectId
+}
+
+model Post {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  price Int
+  images String[]
+  address String
+  city String
+  bedroom Int
+  bathroom Int
+  latitude String
+  longitude String
+  type Type
+  property Property
+  status PostStatus @default(PENDING)
+  rentalStatus RentalStatus @default(AVAILABLE)
+  rentalLocked Boolean @default(false)
+  activeRenterId String? @db.ObjectId
+  rentStartDate DateTime?
+  rentEndDate DateTime?
+  monthlyRentAmount Int?
+  depositAmount Int?
+  reviewedAt DateTime?
+  reviewedById String? @db.ObjectId
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId],references: [id])
+  userId String @db.ObjectId
+  postDetail PostDetail?
+  savedPosts SavedPost[]
+  rentalApplications RentalApplication[]
+  rentalAgreements RentalAgreement[]
+}
+
+enum PostStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Type {
+  buy
+  rent
+}
+
+enum Property {
+  apartment
+  house
+  condo
+  land
+}
+
+enum RentalStatus {
+  AVAILABLE
+  OUT_OF_RENT
+}
+
+enum RentalApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum RentalAgreementStatus {
+  PENDING_DEPOSIT
+  ACTIVE
+  ENDED
+  CANCELLED
+}
+
+enum PaymentPurpose {
+  DEPOSIT
+  RENT
+}
+
+enum PaymentStatus {
+  CREATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+model PostDetail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  desc String
+  utilities String? // ? (Not Required)
+  pet String?
+  income String?
+  size Int?
+  school Int?
+  bus Int?
+  restaurant Int?
+  post Post @relation(fields: [postId],references: [id])
+  postId String @db.ObjectId @unique
+}
+
+model SavedPost {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  user User @relation(fields: [userId],references: [id])
+  post Post @relation(fields: [postId],references: [id])
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  @@unique([userId,postId])
+}
+
+model Chat {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  users User[] @relation(fields: [userIDs],references: [id])
+  userIDs String[] @db.ObjectId
+  createdAt DateTime @default(now())
+  seenBy String[] @db.ObjectId
+  messages Message[]
+  lastMessage String?
+}
+
+model Message{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  text String
+  userId String
+  chat Chat @relation(fields: [chatId],references: [id])
+  chatId String @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model RentalApplication {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  post Post @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+  owner User @relation("OwnerApplications", fields: [ownerId], references: [id])
+  ownerId String @db.ObjectId
+  applicant User @relation("ApplicantApplications", fields: [applicantId], references: [id])
+  applicantId String @db.ObjectId
+  status RentalApplicationStatus @default(PENDING)
+  fullName String
+  phone String
+  email String
+  governmentIdUrl String
+  employmentDetails String
+  rentalHistory String?
+  familyOccupantsInfo String
+  reasonForRenting String
+  stayDurationMonths Int
+  expectedStartDate DateTime
+  expectedEndDate DateTime
+  additionalNotes String?
+  createdAt DateTime @default(now())
+  agreement RentalAgreement?
+
+  @@index([postId, status])
+  @@index([ownerId, status])
+  @@index([applicantId, status])
+}
+
+model RentalAgreement {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  post Post @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+  owner User @relation("AgreementOwner", fields: [ownerId], references: [id])
+  ownerId String @db.ObjectId
+  renter User @relation("AgreementRenter", fields: [renterId], references: [id])
+  renterId String @db.ObjectId
+  application RentalApplication @relation(fields: [applicationId], references: [id])
+  applicationId String @db.ObjectId @unique
+  status RentalAgreementStatus @default(PENDING_DEPOSIT)
+  startDate DateTime
+  expectedEndDate DateTime
+  actualEndDate DateTime?
+  monthlyRentAmount Int
+  depositAmount Int
+  createdAt DateTime @default(now())
+  payments Payment[]
+
+  @@index([postId, status])
+  @@index([renterId, status])
+}
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  agreement RentalAgreement @relation(fields: [agreementId], references: [id])
+  agreementId String @db.ObjectId
+  payer User @relation("PaymentPayer", fields: [payerId], references: [id])
+  payerId String @db.ObjectId
+  receiver User @relation("PaymentReceiver", fields: [receiverId], references: [id])
+  receiverId String @db.ObjectId
+  purpose PaymentPurpose
+  amount Int
+  billingMonth String?
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  razorpaySignature String?
+  status PaymentStatus @default(CREATED)
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([agreementId, purpose, billingMonth])
+  @@index([payerId, status])
+}
+
+model Notification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+  type String
+  title String
+  message String
+  isRead Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}

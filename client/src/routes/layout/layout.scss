@@ -1,0 +1,54 @@
+@import "../../responsive.scss";
+
+.layout{
+    min-height: 100dvh;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    --page-gutter: clamp(10px, 2.2vw, 24px);
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    @include lg{
+        max-width: none;
+    }
+
+    @include md{
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    @include sm{
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .navbar{
+        width: 100%;
+        padding: 10px var(--page-gutter) 12px;
+
+        @include sm {
+            padding-top: 8px;
+            padding-bottom: 10px;
+        }
+    }
+
+    .content{
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        padding: 0 var(--page-gutter) var(--page-gutter);
+        display: flex;
+        flex-direction: column;
+
+        > * {
+            flex: 1;
+            min-height: 0;
+        }
+    }
+}

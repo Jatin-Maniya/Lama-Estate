@@ -1,0 +1,60 @@
+.filter{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border: 1px solid #e8edf3;
+    border-radius: 14px;
+    padding: 14px;
+    background: #fbfdff;
+
+   h1 {
+    font-weight: 600;
+    font-size: 24px;
+    color: #1f2937;
+   } 
+
+   .item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    label{
+        font-size: 10px;
+    }
+
+    input,select{
+        width: 112px;
+        padding: 10px;
+        border: 1px solid #d8e1ec;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+   }
+
+   .top {
+    input{
+        width: 100%;
+    }
+   }
+
+   .bottom{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    button{
+        width: 100px;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: linear-gradient(120deg, #0f766e 0%, #0a5f58 100%);
+
+        img{
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+    }
+   }
+}
