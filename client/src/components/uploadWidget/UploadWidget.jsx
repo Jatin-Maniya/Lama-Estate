@@ -3,7 +3,7 @@ import { createContext, useEffect, useRef, useState } from "react";
 // Create a context to manage the script loading state
 const CloudinaryScriptContext = createContext();
 
-function UploadWidget({ uwConfig, setPublicId, setState, onUploadError, buttonLabel = "Upload" }) {
+function  UploadWidget({ uwConfig, setPublicId, setState, onUploadError, buttonLabel = "Upload" }) {
   const [loaded, setLoaded] = useState(false);
   const widgetRef = useRef(null);
 

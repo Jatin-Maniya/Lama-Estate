@@ -206,7 +206,7 @@ function AdminPage() {
         apiRequest.get("/admin/dashboard"),
         apiRequest.get("/admin/posts/pending"),
         apiRequest.get("/admin/posts"),
-        apiRequest.get("/admin/users"),
+        apiRequest.get("/admin/users"),   
       ]);
 
       setDashboard(dashboardRes.data);
@@ -388,7 +388,7 @@ function AdminPage() {
     return allPosts
       .map((post) => ({
         ...post,
-        flagged: (post.images?.length || 0) === 0 || post.price > 2000000,
+        flagged: (post.images?.length || 0) === 0 || post.price > 10000000,
       }))
       .filter((post) => {
         const matchesSearch = `${post.title} ${post.city}`

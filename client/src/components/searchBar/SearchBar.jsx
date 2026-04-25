@@ -115,7 +115,7 @@ function SearchBar() {
                     <img src="/search.png" alt="" />
                 </button>
             </form>
-            <p className="searchHint">Smart search preview: {previewPath}</p>
+            {/* <p className="searchHint">Smart search preview: {previewPath}</p> */}
 
             {hasPreviewIntent && (
                 <div className="searchPreview">

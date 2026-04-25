@@ -84,6 +84,8 @@ function ProfilePage() {
     const [rentalLoading, setRentalLoading] = useState(false)
     const [rentalActionLoading, setRentalActionLoading] = useState("")
     const [rentalError, setRentalError] = useState("")
+    const [selectedApplication, setSelectedApplication] = useState(null)
+    const [showApplicationModal, setShowApplicationModal] = useState(false)
     const isAdmin = Boolean(currentUser?.isAdmin)
 
     const navigate = useNavigate();
@@ -450,6 +452,16 @@ function ProfilePage() {
                                                     <div key={application.id} className="rentalItem">
                                                         <strong>{application.post?.title}</strong>
                                                         <span>{application.fullName} · {application.status}</span>
+                                                        <button 
+                                                            type="button" 
+                                                            className="viewDetailsBtn"
+                                                            onClick={() => {
+                                                                setSelectedApplication(application)
+                                                                setShowApplicationModal(true)
+                                                            }}
+                                                        >
+                                                            View Details
+                                                        </button>
                                                         {application.status === "PENDING" && (
                                                             <div className="rentalActions">
                                                                 <button type="button" onClick={() => handleAcceptApplication(application.id)} disabled={rentalActionLoading === application.id}>Accept</button>
@@ -566,6 +578,144 @@ function ProfilePage() {
 
                 </div>
             </div>
+
+            {/* Application Details Modal */}
+            {showApplicationModal && selectedApplication && (
+                <div className="rentModalOverlay" onClick={() => setShowApplicationModal(false)}>
+                    <div className="rentModal applicationDetailsModal" onClick={(e) => e.stopPropagation()}>
+                        <div className="rentModalHeader">
+                            <h3>Rental Application Details</h3>
+                            <button type="button" className="closeBtn" onClick={() => setShowApplicationModal(false)}>×</button>
+                        </div>
+                        <div className="rentModalBody">
+                            <div className="detailSection">
+                                <h4>Property Information</h4>
+                                <div className="detailRow">
+                                    <span className="label">Property Title:</span>
+                                    <span className="value">{selectedApplication.post?.title}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Property Type:</span>
+                                    <span className="value">{selectedApplication.post?.type}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Monthly Rent:</span>
+                                    <span className="value">{formatINR(selectedApplication.post?.monthlyRentAmount || selectedApplication.post?.price)}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Deposit:</span>
+                                    <span className="value">{formatINR(selectedApplication.post?.depositAmount || Math.round((selectedApplication.post?.monthlyRentAmount || selectedApplication.post?.price) * 0.2))}</span>
+                                </div>
+                            </div>
+
+                            <div className="detailSection">
+                                <h4>Applicant Information</h4>
+                                <div className="detailRow">
+                                    <span className="label">Full Name:</span>
+                                    <span className="value">{selectedApplication.fullName}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Email:</span>
+                                    <span className="value">{selectedApplication.email}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Phone:</span>
+                                    <span className="value">{selectedApplication.phone}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Government ID:</span>
+                                    <span className="value">
+                                        {selectedApplication.governmentIdUrl}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="detailSection">
+                                <h4>Employment & Background</h4>
+                                <div className="detailRow">
+                                    <span className="label">Employment Details:</span>
+                                    <span className="value">{selectedApplication.employmentDetails}</span>
+                                </div>
+                                {selectedApplication.rentalHistory && (
+                                    <div className="detailRow">
+                                        <span className="label">Rental History:</span>
+                                        <span className="value">{selectedApplication.rentalHistory}</span>
+                                    </div>
+                                )}
+                                <div className="detailRow">
+                                    <span className="label">Family/Occupants:</span>
+                                    <span className="value">{selectedApplication.familyOccupantsInfo}</span>
+                                </div>
+                            </div>
+
+                            <div className="detailSection">
+                                <h4>Rental Plan</h4>
+                                <div className="detailRow">
+                                    <span className="label">Reason for Renting:</span>
+                                    <span className="value">{selectedApplication.reasonForRenting}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Stay Duration:</span>
+                                    <span className="value">{selectedApplication.stayDurationMonths} months</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Expected Start Date:</span>
+                                    <span className="value">{selectedApplication.expectedStartDate ? new Date(selectedApplication.expectedStartDate).toLocaleDateString() : "Not specified"}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Expected End Date:</span>
+                                    <span className="value">{selectedApplication.expectedEndDate ? new Date(selectedApplication.expectedEndDate).toLocaleDateString() : "Not specified"}</span>
+                                </div>
+                                {selectedApplication.additionalNotes && (
+                                    <div className="detailRow">
+                                        <span className="label">Additional Notes:</span>
+                                        <span className="value">{selectedApplication.additionalNotes}</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="detailSection">
+                                <h4>Application Status</h4>
+                                <div className="detailRow">
+                                    <span className="label">Status:</span>
+                                    <span className={`value statusBadge ${selectedApplication.status.toLowerCase()}`}>{selectedApplication.status}</span>
+                                </div>
+                                <div className="detailRow">
+                                    <span className="label">Submitted On:</span>
+                                    <span className="value">{new Date(selectedApplication.createdAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+
+                            {selectedApplication.status === "PENDING" && (
+                                <div className="modalActions">
+                                    <button 
+                                        type="button" 
+                                        className="acceptBtn"
+                                        onClick={() => {
+                                            handleAcceptApplication(selectedApplication.id)
+                                            setShowApplicationModal(false)
+                                        }}
+                                        disabled={rentalActionLoading === selectedApplication.id}
+                                    >
+                                        {rentalActionLoading === selectedApplication.id ? "Processing..." : "Accept Application"}
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        className="rejectBtn"
+                                        onClick={() => {
+                                            handleRejectApplication(selectedApplication.id)
+                                            setShowApplicationModal(false)
+                                        }}
+                                        disabled={rentalActionLoading === selectedApplication.id}
+                                    >
+                                        {rentalActionLoading === selectedApplication.id ? "Processing..." : "Reject Application"}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
