@@ -11,7 +11,9 @@ export const SocketContextProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
-    setSocket(io(import.meta.env.VITE_SOCKET_URL || "http://localhost:4000"))
+    setSocket(io(import.meta.env.VITE_SOCKET_URL || window.location.origin, {
+  withCredentials: true,
+  }))
   }, []);
 
   useEffect(()=>{
